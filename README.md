@@ -10,14 +10,16 @@ Timer e cronômetro em uma SPA estática. O projeto não possui backend, trackin
 
 ## Comandos
 
-| Comando             | Finalidade                                      |
-| ------------------- | ----------------------------------------------- |
-| `npm run dev`       | servidor local com hot reload                   |
-| `npm run typecheck` | validação TypeScript sem emissão                |
-| `npm run lint`      | análise estática                                |
-| `npm run test`      | testes unitários e de componentes               |
-| `npm run build`     | typecheck e build estático em `dist/`           |
-| `npm run verify`    | verificação completa antes de integrar mudanças |
+| Comando               | Finalidade                                  |
+| --------------------- | ------------------------------------------- |
+| `npm run dev`         | servidor local com hot reload               |
+| `npm run typecheck`   | validação TypeScript sem emissão            |
+| `npm run lint`        | análise estática                            |
+| `npm run test`        | testes unitários e de componentes           |
+| `npm run test:e2e`    | build e testes dos fluxos reais no Chromium |
+| `npm run build`       | typecheck e build estático em `dist/`       |
+| `npm run verify`      | formatação, tipos, lint, unitários e build  |
+| `npm run verify:full` | `verify` mais E2E; gate de integração       |
 
 ## Arquitetura
 
@@ -42,7 +44,7 @@ Os temas possuem testes de contraste e de sincronização entre os tokens TypeSc
 Antes de considerar uma alteração pronta:
 
 1. Rode o teste mais próximo da área alterada.
-2. Rode `npm run verify`.
+2. Rode `npm run verify:full` antes de integrar a branch.
 3. Confirme que nenhuma persistência ou requisição externa em runtime foi adicionada.
 4. Para mudanças visuais, confira teclado, foco visível, contraste e layout mobile.
 
@@ -52,4 +54,4 @@ Regras adicionais para pessoas e agentes estão em [AGENTS.md](./AGENTS.md).
 
 `npm run build` gera `dist/`, que pode ser servido por qualquer hospedagem estática. Não existe processo de servidor da aplicação em produção.
 
-O baseline de produção usa Vercel com `main` como branch de produção. `vercel.json` define o build e os headers defensivos; nenhum runtime ou secret é necessário. O workflow de CI executa a mesma verificação usada localmente antes da integração de mudanças.
+O baseline de produção usa Vercel com `main` como branch de produção. `vercel.json` define o build e os headers defensivos; nenhum runtime ou secret é necessário. O workflow de CI executa `npm run verify:full`, incluindo os fluxos reais no Chromium, antes da integração de mudanças.
