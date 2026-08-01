@@ -155,7 +155,7 @@ export function TimerPanel({ timer, announce }: TimerPanelProps) {
                   <button
                     aria-label={`Definir Timer para ${minutes} minutos`}
                     aria-pressed={timer.configuredDurationMs === durationMs}
-                    className="min-h-11 rounded-full border border-[var(--border)] px-4 text-sm font-bold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)] disabled:cursor-not-allowed disabled:opacity-45 aria-pressed:border-[var(--accent)] aria-pressed:bg-[var(--accent-soft)] aria-pressed:text-[var(--text-primary)]"
+                    className="min-h-11 rounded-full border border-[var(--border)] px-4 text-sm font-bold text-[var(--text-primary)] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)] disabled:cursor-not-allowed disabled:opacity-45 aria-pressed:border-[var(--accent)] aria-pressed:bg-[var(--accent-soft)]"
                     key={minutes}
                     onClick={() => selectPreset(minutes)}
                     type="button"
@@ -171,7 +171,7 @@ export function TimerPanel({ timer, announce }: TimerPanelProps) {
             <legend className="mb-3 text-left text-xs font-bold tracking-[0.16em] text-[var(--text-secondary)] uppercase">
               Manual
             </legend>
-            <div className="flex items-end gap-2">
+            <div className="flex flex-wrap items-end gap-2">
               {(
                 [
                   ['hours', 'Horas', 99],
@@ -210,7 +210,7 @@ export function TimerPanel({ timer, announce }: TimerPanelProps) {
                 </div>
               ))}
               <button
-                className="min-h-11 rounded-xl border border-[var(--border)] px-3 text-xs font-bold transition-colors hover:bg-[var(--surface-elevated)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)] disabled:cursor-not-allowed disabled:opacity-45"
+                className="min-h-11 basis-full rounded-xl border border-[var(--border)] px-3 text-xs font-bold text-[var(--text-primary)] transition-colors hover:bg-[var(--surface-elevated)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)] disabled:cursor-not-allowed disabled:opacity-45 sm:basis-auto"
                 onClick={applyManualDuration}
                 type="button"
               >

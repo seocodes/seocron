@@ -23,7 +23,7 @@ export function ModeToggle({ activeMode, onChange }: ModeToggleProps) {
         return (
           <button
             aria-pressed={isActive}
-            className="min-h-11 rounded-full px-4 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)] aria-pressed:bg-[var(--accent)] aria-pressed:text-[var(--on-accent)]"
+            className="min-h-11 rounded-full px-4 text-sm font-semibold text-[var(--text-primary)] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)] aria-pressed:bg-[var(--accent)] aria-pressed:text-[var(--on-accent)]"
             key={mode.id}
             onClick={() => onChange(mode.id)}
             type="button"
