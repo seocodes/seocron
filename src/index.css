@@ -6,12 +6,16 @@
 :root {
   --background: #20242c;
   --surface: #2b303b;
+  --surface-elevated: #353c48;
   --text-primary: #f2f4f8;
   --text-secondary: #c3cad6;
   --accent: #88c0d0;
+  --accent-hover: #9acbd8;
+  --accent-soft: #3a5360;
   --on-accent: #172027;
   --border: #4c566a;
   --focus-ring: #ebcb8b;
+  --danger: #ffb4ab;
 
   color: var(--text-primary);
   background: var(--background);
