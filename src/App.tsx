@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import { ModeToggle, type Mode } from './components/ModeToggle'
+import { AppearancePanel } from './features/appearance/AppearancePanel'
 import { StopwatchPanel } from './features/stopwatch/StopwatchPanel'
 import { useStopwatch } from './features/stopwatch/useStopwatch'
 import { TimerPanel } from './features/timer/TimerPanel'
@@ -54,6 +55,8 @@ function App() {
       <p aria-atomic="true" aria-live="polite" className="sr-only">
         {liveMessage}
       </p>
+
+      <AppearancePanel />
     </main>
   )
 }
