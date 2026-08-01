@@ -14,6 +14,12 @@ playwright-report
 test-results
 *.local
 
+# Local environment and hosting metadata
+.env
+.env.*
+!.env.example
+.vercel
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
