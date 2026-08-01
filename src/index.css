@@ -1,0 +1,61 @@
+@import '@fontsource-variable/jetbrains-mono';
+@import '@fontsource/space-mono/latin-400.css';
+@import '@fontsource/space-mono/latin-700.css';
+@import 'tailwindcss';
+
+:root {
+  --background: #20242c;
+  --surface: #2b303b;
+  --text-primary: #f2f4f8;
+  --text-secondary: #c3cad6;
+  --accent: #88c0d0;
+  --on-accent: #172027;
+  --border: #4c566a;
+  --focus-ring: #ebcb8b;
+
+  color: var(--text-primary);
+  background: var(--background);
+  font-family:
+    'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@theme {
+  --font-digital:
+    'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  min-height: 100%;
+  background: var(--background);
+}
+
+body {
+  min-width: 320px;
+  min-height: 100svh;
+  margin: 0;
+  background: var(--background);
+}
+
+button {
+  font: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
