@@ -43,3 +43,5 @@ Regras adicionais para pessoas e agentes estão em [AGENTS.md](./AGENTS.md).
 ## Deploy
 
 `npm run build` gera `dist/`, que pode ser servido por qualquer hospedagem estática. Não existe processo de servidor da aplicação em produção.
+
+O baseline de produção usa Vercel com `main` como branch de produção. `vercel.json` define o build e os headers defensivos; nenhum runtime ou secret é necessário. O workflow de CI executa a mesma verificação usada localmente antes da integração de mudanças.
