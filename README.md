@@ -23,11 +23,19 @@ Timer e cronômetro em uma SPA estática. O projeto não possui backend, trackin
 
 A aplicação usa React e TypeScript sobre Vite. Tailwind fornece utilitários de layout; cores são expostas por tokens CSS semânticos para permitir temas curados sem acoplar componentes a paletas específicas.
 
-Os motores de Timer e Cronômetro serão hooks independentes da interface. Intervalos ou `requestAnimationFrame` servem apenas para solicitar renderização. O valor autoritativo sempre é calculado por diferenças entre timestamps de `Date.now()`, evitando drift quando a aba fica em background.
+Os motores de Timer e Cronômetro são hooks independentes da interface. O Timer armazena o timestamp de término; o Cronômetro armazena o timestamp de início e o tempo já acumulado. Intervalos servem apenas para solicitar renderização. O valor autoritativo sempre é calculado por diferenças de `Date.now()`, inclusive ao retornar de uma aba suspensa.
 
 Preferências de tema e fonte vivem somente em state React. É uma invariante do produto não ler nem gravar Web Storage, cookies, banco de dados ou APIs remotas.
 
 As fontes são empacotadas no build por pacotes Fontsource e servidas pelo mesmo host da aplicação.
+
+Integrações de navegador ficam em hooks isolados:
+
+- Wake Lock é solicitado apenas enquanto o modo ativo está rodando, readquirido após retorno à aba e liberado ao pausar ou desmontar.
+- O título da página deriva do modo e do timestamp atual.
+- Atalhos globais ignoram campos e controles interativos para preservar comportamento nativo de teclado.
+
+Os temas possuem testes de contraste e de sincronização entre os tokens TypeScript e o CSS enviado. Axe cobre a semântica da aplicação em todas as paletas; contraste é testado separadamente porque jsdom não possui engine de layout.
 
 ## Verificação
 
