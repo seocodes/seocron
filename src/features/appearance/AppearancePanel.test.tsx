@@ -26,6 +26,13 @@ describe('AppearancePanel', () => {
     expect(document.documentElement).toHaveAttribute('data-theme', 'dracula')
     expect(document.documentElement).toHaveAttribute('data-font', 'space')
 
+    await user.selectOptions(
+      screen.getByRole('combobox', { name: 'Fonte' }),
+      'dseg7',
+    )
+
+    expect(document.documentElement).toHaveAttribute('data-font', 'dseg7')
+
     unmount()
 
     expect(document.documentElement).not.toHaveAttribute('data-theme')

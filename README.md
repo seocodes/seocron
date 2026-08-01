@@ -29,7 +29,7 @@ Os motores de Timer e Cronômetro são hooks independentes da interface. O Timer
 
 Preferências de tema e fonte vivem somente em state React. É uma invariante do produto não ler nem gravar Web Storage, cookies, banco de dados ou APIs remotas.
 
-As fontes são empacotadas no build por pacotes Fontsource e servidas pelo mesmo host da aplicação.
+As fontes são empacotadas no build e servidas pelo mesmo host da aplicação. JetBrains Mono, Space Mono e VT323 vêm de pacotes Fontsource; DSEG7 Classic vem do pacote oficial DSEG. Nenhuma fonte usa CDN em runtime.
 
 Integrações de navegador ficam em hooks isolados:
 

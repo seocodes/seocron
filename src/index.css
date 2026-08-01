@@ -1,7 +1,17 @@
 @import '@fontsource-variable/jetbrains-mono';
 @import '@fontsource/space-mono/latin-400.css';
 @import '@fontsource/space-mono/latin-700.css';
+@import '@fontsource/vt323/latin-400.css';
 @import 'tailwindcss';
+
+@font-face {
+  font-family: 'DSEG7 Classic';
+  src: url('../node_modules/dseg/fonts/DSEG7-Classic/DSEG7Classic-Regular.woff2')
+    format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
   --background: #20242c;
@@ -21,8 +31,9 @@
   background: var(--background);
   --font-digital-current:
     'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Consolas, monospace;
+  --font-ui-current: var(--font-digital-current);
 
-  font-family: var(--font-digital-current);
+  font-family: var(--font-ui-current);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -126,6 +137,22 @@
 :root[data-font='space'] {
   --font-digital-current:
     'Space Mono', ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+:root[data-font='vt323'] {
+  --font-digital-current:
+    'VT323', ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+:root[data-font='dseg7'] {
+  --font-digital-current:
+    'DSEG7 Classic', 'VT323', ui-monospace, SFMono-Regular, Consolas, monospace;
+  --font-ui-current: 'VT323', ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+:root[data-font='dseg7'] .font-digital {
+  font-weight: 400;
+  letter-spacing: 0.02em;
 }
 
 * {

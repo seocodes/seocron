@@ -9,7 +9,7 @@ export const themeIds = [
 ] as const
 
 export type ThemeId = (typeof themeIds)[number]
-export type FontId = 'jetbrains' | 'space'
+export type FontId = 'jetbrains' | 'space' | 'vt323' | 'dseg7'
 
 export interface ThemeTokens {
   background: string
@@ -164,4 +164,6 @@ export const themes: ThemeDefinition[] = [
 export const fonts: Array<{ id: FontId; label: string }> = [
   { id: 'jetbrains', label: 'JetBrains Mono' },
   { id: 'space', label: 'Space Mono' },
+  { id: 'vt323', label: 'VT323 · CRT' },
+  { id: 'dseg7', label: 'DSEG7 · LCD clássico' },
 ]

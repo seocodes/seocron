@@ -27,10 +27,15 @@ test('atalhos globais ignoram inputs e controlam o modo ativo', async ({
 test('aparência vive apenas na memória da aba', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('combobox', { name: 'Tema' }).selectOption('signal-red')
-  await page.getByRole('combobox', { name: 'Fonte' }).selectOption('space')
+  await page.getByRole('combobox', { name: 'Fonte' }).selectOption('dseg7')
 
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'signal-red')
-  await expect(page.locator('html')).toHaveAttribute('data-font', 'space')
+  await expect(page.locator('html')).toHaveAttribute('data-font', 'dseg7')
+  await expect
+    .poll(() =>
+      page.evaluate(() => document.fonts.check('400 64px "DSEG7 Classic"')),
+    )
+    .toBe(true)
 
   await page.reload()
   await expect(page.getByRole('combobox', { name: 'Tema' })).toHaveValue('nord')
@@ -52,8 +57,14 @@ test.describe('layout mobile', () => {
           document.documentElement.clientWidth,
       )
 
-    await expect.poll(hasHorizontalOverflow).toBe(false)
-    await page.getByRole('button', { name: 'Cronômetro', exact: true }).click()
-    await expect.poll(hasHorizontalOverflow).toBe(false)
+    for (const fontId of ['vt323', 'dseg7']) {
+      await page.getByRole('combobox', { name: 'Fonte' }).selectOption(fontId)
+      await expect.poll(hasHorizontalOverflow).toBe(false)
+      await page
+        .getByRole('button', { name: 'Cronômetro', exact: true })
+        .click()
+      await expect.poll(hasHorizontalOverflow).toBe(false)
+      await page.getByRole('button', { name: 'Timer', exact: true }).click()
+    }
   })
 })
