@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 
@@ -36,6 +36,33 @@ describe('App', () => {
     )
     expect(
       screen.getByRole('heading', { name: 'Cronômetro' }),
+    ).toBeInTheDocument()
+  })
+
+  it('pauses the running mode before switching', async () => {
+    const user = userEvent.setup()
+    renderApp()
+
+    await user.click(screen.getByRole('button', { name: 'Iniciar Timer' }))
+    await user.click(screen.getByRole('button', { name: 'Cronômetro' }))
+    await user.click(screen.getByRole('button', { name: 'Timer' }))
+
+    expect(
+      screen.getByRole('button', { name: 'Continuar Timer' }),
+    ).toBeInTheDocument()
+  })
+
+  it('controls the active mode with keyboard shortcuts', () => {
+    renderApp()
+
+    fireEvent.keyDown(window, { code: 'Space' })
+    expect(
+      screen.getByRole('button', { name: 'Pausar Timer' }),
+    ).toBeInTheDocument()
+
+    fireEvent.keyDown(window, { key: 'r' })
+    expect(
+      screen.getByRole('button', { name: 'Iniciar Timer' }),
     ).toBeInTheDocument()
   })
 })

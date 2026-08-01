@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { ModeToggle, type Mode } from './components/ModeToggle'
 import { AppearancePanel } from './features/appearance/AppearancePanel'
@@ -6,6 +6,10 @@ import { StopwatchPanel } from './features/stopwatch/StopwatchPanel'
 import { useStopwatch } from './features/stopwatch/useStopwatch'
 import { TimerPanel } from './features/timer/TimerPanel'
 import { useTimer } from './features/timer/useTimer'
+import { useDocumentTitle } from './hooks/useDocumentTitle'
+import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
+import { useWakeLock } from './hooks/useWakeLock'
+import { formatTimerDuration } from './lib/time/formatDuration'
 import { MINUTE_MS } from './lib/time/time.constants'
 
 function App() {
@@ -13,6 +17,72 @@ function App() {
   const [liveMessage, setLiveMessage] = useState('')
   const timer = useTimer(5 * MINUTE_MS)
   const stopwatch = useStopwatch()
+  const previousTimerStatus = useRef(timer.status)
+  const activeRunning =
+    activeMode === 'timer'
+      ? timer.status === 'running'
+      : stopwatch.status === 'running'
+  const titleTime =
+    activeMode === 'timer'
+      ? formatTimerDuration(timer.remainingMs)
+      : formatTimerDuration(Math.floor(stopwatch.elapsedMs / 1_000) * 1_000)
+  const titleMode = activeMode === 'timer' ? 'Timer' : 'Cronômetro'
+
+  useDocumentTitle(`${titleTime} · ${titleMode} — seocron`)
+  useWakeLock(activeRunning)
+
+  useEffect(() => {
+    if (
+      previousTimerStatus.current !== 'completed' &&
+      timer.status === 'completed'
+    ) {
+      setLiveMessage('Timer concluído')
+    }
+
+    previousTimerStatus.current = timer.status
+  }, [timer.status])
+
+  const toggleActiveMode = useCallback(() => {
+    if (activeMode === 'timer') {
+      if (timer.status === 'running') {
+        timer.pause()
+        setLiveMessage('Timer pausado')
+      } else {
+        timer.start()
+        setLiveMessage(
+          timer.status === 'paused' ? 'Timer retomado' : 'Timer iniciado',
+        )
+      }
+      return
+    }
+
+    if (stopwatch.status === 'running') {
+      stopwatch.pause()
+      setLiveMessage('Cronômetro pausado')
+    } else {
+      stopwatch.start()
+      setLiveMessage(
+        stopwatch.status === 'paused'
+          ? 'Cronômetro retomado'
+          : 'Cronômetro iniciado',
+      )
+    }
+  }, [activeMode, stopwatch, timer])
+
+  const resetActiveMode = useCallback(() => {
+    if (activeMode === 'timer') {
+      timer.reset()
+      setLiveMessage('Timer resetado')
+    } else {
+      stopwatch.reset()
+      setLiveMessage('Cronômetro resetado')
+    }
+  }, [activeMode, stopwatch, timer])
+
+  useKeyboardShortcuts({
+    onToggle: toggleActiveMode,
+    onReset: resetActiveMode,
+  })
 
   const changeMode = (nextMode: Mode) => {
     if (nextMode === activeMode) {
