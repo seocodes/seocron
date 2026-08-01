@@ -1,8 +1,9 @@
 import { useState } from 'react'
 
 import { ModeToggle, type Mode } from './components/ModeToggle'
-import { TimerPanel } from './features/timer/TimerPanel'
+import { StopwatchPanel } from './features/stopwatch/StopwatchPanel'
 import { useStopwatch } from './features/stopwatch/useStopwatch'
+import { TimerPanel } from './features/timer/TimerPanel'
 import { useTimer } from './features/timer/useTimer'
 import { MINUTE_MS } from './lib/time/time.constants'
 
@@ -46,12 +47,7 @@ function App() {
         {activeMode === 'timer' ? (
           <TimerPanel announce={setLiveMessage} timer={timer} />
         ) : (
-          <section aria-labelledby="stopwatch-title" className="text-center">
-            <h1 id="stopwatch-title">Cronômetro</h1>
-            <p className="mt-3 text-[var(--text-secondary)]">
-              A interface do Cronômetro entra no próximo commit.
-            </p>
-          </section>
+          <StopwatchPanel announce={setLiveMessage} stopwatch={stopwatch} />
         )}
       </div>
 
