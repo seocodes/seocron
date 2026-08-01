@@ -4,7 +4,7 @@ Timer e cronômetro em uma SPA estática. O projeto não possui backend, trackin
 
 ## Requisitos
 
-- Node.js 20.19+ ou 22.12+.
+- Node.js 24.15+.
 - npm.
 - HTTPS no ambiente publicado para uso da Screen Wake Lock API.
 
