@@ -12,18 +12,14 @@ const modes: Array<{ id: Mode; label: string }> = [
 
 export function ModeToggle({ activeMode, onChange }: ModeToggleProps) {
   return (
-    <div
-      aria-label="Modo de contagem"
-      className="flex rounded-full border border-[var(--border)] bg-[var(--surface)] p-1"
-      role="group"
-    >
+    <div aria-label="Modo de contagem" className="mode-switch" role="group">
       {modes.map((mode) => {
         const isActive = activeMode === mode.id
 
         return (
           <button
             aria-pressed={isActive}
-            className="min-h-11 rounded-full px-4 text-sm font-semibold text-[var(--text-primary)] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)] aria-pressed:bg-[var(--accent)] aria-pressed:text-[var(--on-accent)]"
+            className="mode-switch__button"
             key={mode.id}
             onClick={() => onChange(mode.id)}
             type="button"

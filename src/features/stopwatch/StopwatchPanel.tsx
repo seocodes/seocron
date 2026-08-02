@@ -45,20 +45,28 @@ export function StopwatchPanel({ stopwatch, announce }: StopwatchPanelProps) {
       : 'Iniciar'
 
   return (
-    <section
-      aria-labelledby="stopwatch-title"
-      className="flex w-full flex-col items-center"
-    >
+    <section aria-labelledby="stopwatch-title" className="instrument-panel">
       <h1 className="sr-only" id="stopwatch-title">
         Cronômetro
       </h1>
-      <p className="mb-4 text-sm text-[var(--text-secondary)]">
-        {isRunning ? 'Tempo decorrido' : 'Pronto para começar'}
-      </p>
+      <div className="display-bezel">
+        <div className="display-status">
+          <span aria-hidden="true" className="display-status__marker" />
+          <span>
+            {isRunning
+              ? 'Tempo decorrido'
+              : stopwatch.status === 'paused'
+                ? 'Cronômetro pausado'
+                : 'Pronto para começar'}
+          </span>
+        </div>
+        <TimeDisplay compact label="Cronômetro" value={displayValue} />
+        <p aria-hidden="true" className="display-units">
+          MM&nbsp;&nbsp;&nbsp;SS&nbsp;&nbsp;&nbsp;CS
+        </p>
+      </div>
 
-      <TimeDisplay compact label="Cronômetro" value={displayValue} />
-
-      <div className="mt-9 flex flex-wrap justify-center gap-3">
+      <div className="control-deck">
         <ControlButton
           aria-label={`${primaryLabel} Cronômetro`}
           intent="primary"
@@ -94,51 +102,52 @@ export function StopwatchPanel({ stopwatch, announce }: StopwatchPanelProps) {
         </ControlButton>
       </div>
 
-      <div className="mt-12 w-full max-w-2xl overflow-hidden rounded-3xl border border-[var(--border)] bg-[var(--surface)]">
-        <div className="flex items-center justify-between border-b border-[var(--border)] px-5 py-4 sm:px-6">
-          <h2 className="text-xs font-bold tracking-[0.16em] text-[var(--text-secondary)] uppercase">
-            Voltas
-          </h2>
-          <span className="text-xs text-[var(--text-secondary)]">
-            {stopwatch.laps.length}
+      <div className="lap-register">
+        <div className="lap-register__header">
+          <h2 className="panel-legend">Voltas</h2>
+          <span className="lap-register__count">
+            MEM {stopwatch.laps.length.toString().padStart(2, '0')}
           </span>
         </div>
 
         {stopwatch.laps.length === 0 ? (
-          <p className="px-5 py-8 text-sm text-[var(--text-secondary)]">
+          <p className="lap-register__empty">
             As voltas registradas aparecerão aqui.
           </p>
         ) : (
           <div
-            className="max-h-64 overflow-y-auto"
+            className="lap-register__scroll"
             role="region"
             aria-label="Lista de voltas"
             tabIndex={0}
           >
-            <table className="w-full border-collapse text-sm tabular-nums">
-              <thead className="sr-only">
+            <table className="lap-table">
+              <thead>
                 <tr>
-                  <th scope="col">Volta</th>
-                  <th scope="col">Parcial</th>
-                  <th scope="col">Total</th>
+                  <th className="lap-table__heading" scope="col">
+                    Volta
+                  </th>
+                  <th className="lap-table__heading text-right" scope="col">
+                    Parcial
+                  </th>
+                  <th className="lap-table__heading text-right" scope="col">
+                    Total
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {stopwatch.laps.toReversed().map((lap) => (
-                  <tr
-                    className="border-b border-[var(--border)] last:border-b-0"
-                    key={lap.number}
-                  >
+                  <tr className="lap-table__row" key={lap.number}>
                     <th
-                      className="px-5 py-4 text-left font-bold sm:px-6"
+                      className="lap-table__cell lap-table__cell--index"
                       scope="row"
                     >
                       {lap.number.toString().padStart(2, '0')}
                     </th>
-                    <td className="px-3 py-4 text-right text-[var(--text-secondary)]">
+                    <td className="lap-table__cell text-right text-[var(--text-secondary)]">
                       +{formatStopwatchDuration(lap.splitMs)}
                     </td>
-                    <td className="px-5 py-4 text-right font-bold sm:px-6">
+                    <td className="lap-table__cell text-right font-bold">
                       {formatStopwatchDuration(lap.elapsedMs)}
                     </td>
                   </tr>
