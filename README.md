@@ -2,6 +2,29 @@
 
 Timer e cronômetro em uma SPA estática. O projeto não possui backend, tracking nem persistência no navegador; todo estado termina ao recarregar ou fechar a aba.
 
+[Abrir aplicação](https://seocron-ashen.vercel.app/) · [CI](https://github.com/seocodes/seocron/actions/workflows/ci.yml) · [MIT](./LICENSE)
+
+<p align="center">
+  <img src="./docs/screenshots/timer-desktop.png" alt="Timer do seocron no tema Nord" width="100%" />
+</p>
+
+## Funcionalidades
+
+- Timer com presets de 5, 10 e 25 minutos e entrada manual.
+- Cronômetro com registro de voltas e tempos parciais.
+- Contagem derivada de timestamps reais, sem acumular ticks de intervalo.
+- Wake Lock enquanto a contagem está ativa, com fallback para navegadores incompatíveis.
+- Sete temas curados e quatro fontes locais, incluindo opções CRT e LCD clássicas.
+- Atalhos desktop: `Space` inicia ou pausa; `R` reseta o modo ativo.
+- Layout responsivo, título da aba em tempo real e estado restrito à memória da aba.
+
+## Outros modos
+
+<p align="center">
+  <img src="./docs/screenshots/stopwatch-desktop.png" alt="Cronômetro com voltas no tema Dracula e fonte DSEG7" width="64%" />
+  <img src="./docs/screenshots/timer-mobile.png" alt="Timer mobile no tema Signal Red e fonte VT323" width="30%" />
+</p>
+
 ## Requisitos
 
 - Node.js 24.15+.
