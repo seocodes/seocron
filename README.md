@@ -14,15 +14,15 @@ Timer e cronômetro em uma SPA estática. O projeto não possui backend, trackin
 - Cronômetro com registro de voltas e tempos parciais.
 - Contagem derivada de timestamps reais, sem acumular ticks de intervalo.
 - Wake Lock enquanto a contagem está ativa, com fallback para navegadores incompatíveis.
-- Sete temas curados e quatro fontes locais, incluindo opções CRT e LCD clássicas.
+- Dez temas curados e quatro fontes locais, incluindo opções CRT e LCD clássicas.
 - Atalhos desktop: `Space` inicia ou pausa; `R` reseta o modo ativo.
 - Layout responsivo, título da aba em tempo real e estado restrito à memória da aba.
 
 ## Outros modos
 
 <p align="center">
-  <img src="./docs/screenshots/stopwatch-desktop.png" alt="Cronômetro com voltas no tema Dracula e fonte DSEG7" width="64%" />
-  <img src="./docs/screenshots/timer-mobile.png" alt="Timer mobile no tema Signal Red e fonte VT323" width="30%" />
+  <img src="./docs/screenshots/stopwatch-desktop.png" alt="Cronômetro com volta no tema Marine Instrument e fonte DSEG7" width="64%" />
+  <img src="./docs/screenshots/timer-mobile.png" alt="Timer mobile no tema Pit Lane e fonte VT323" width="30%" />
 </p>
 
 ## Requisitos
