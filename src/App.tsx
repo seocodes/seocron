@@ -106,27 +106,36 @@ function App() {
   }
 
   return (
-    <main className="mx-auto flex min-h-svh w-full max-w-5xl flex-col px-5 pt-[max(1.5rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:px-8 sm:py-8">
-      <header className="flex items-center justify-between gap-4">
-        <p className="text-sm font-semibold tracking-[0.24em] text-[var(--text-secondary)] uppercase">
-          seocron
+    <main className="app-shell">
+      <div className="instrument-chassis">
+        <header className="instrument-nameplate">
+          <div className="flex min-w-0 items-center gap-3">
+            <span
+              aria-hidden="true"
+              className={`status-led ${activeRunning ? 'status-led--active' : ''}`}
+            />
+            <div className="min-w-0">
+              <p className="instrument-brand">seocron</p>
+              <p className="instrument-model">precision timing instrument</p>
+            </div>
+          </div>
+          <ModeToggle activeMode={activeMode} onChange={changeMode} />
+        </header>
+
+        <div className="instrument-stage">
+          {activeMode === 'timer' ? (
+            <TimerPanel announce={setLiveMessage} timer={timer} />
+          ) : (
+            <StopwatchPanel announce={setLiveMessage} stopwatch={stopwatch} />
+          )}
+        </div>
+
+        <p aria-atomic="true" aria-live="polite" className="sr-only">
+          {liveMessage}
         </p>
-        <ModeToggle activeMode={activeMode} onChange={changeMode} />
-      </header>
 
-      <div className="flex flex-1 items-center justify-center py-12 sm:py-16">
-        {activeMode === 'timer' ? (
-          <TimerPanel announce={setLiveMessage} timer={timer} />
-        ) : (
-          <StopwatchPanel announce={setLiveMessage} stopwatch={stopwatch} />
-        )}
+        <AppearancePanel />
       </div>
-
-      <p aria-atomic="true" aria-live="polite" className="sr-only">
-        {liveMessage}
-      </p>
-
-      <AppearancePanel />
     </main>
   )
 }
