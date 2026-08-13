@@ -1,80 +1,100 @@
 # seocron
 
-Timer e cronômetro em uma SPA estática. O projeto não possui backend, tracking nem persistência no navegador; todo estado termina ao recarregar ou fechar a aba.
+Timer e Cronômetro em uma SPA estática, acessível e privada. Não há backend, tracking nem persistência no navegador; todo estado termina ao recarregar ou fechar a aba.
 
-[Abrir aplicação](https://seocron-ashen.vercel.app/) · [CI](https://github.com/seocodes/seocron/actions/workflows/ci.yml) · [MIT](./LICENSE)
+[Abrir aplicação](https://seocron-ashen.vercel.app/) · [CI](https://github.com/seocodes/seocron/actions/workflows/ci.yml) · [Contexto](./docs/PROJECT_CONTEXT.md) · [Guia de engenharia](./docs/GUIA_DE_ENGENHARIA.md) · [Backlog](./docs/BACKLOG.md) · [MIT](./LICENSE)
 
 <p align="center">
-  <img src="./docs/screenshots/timer-desktop.png" alt="Timer do seocron no tema Nord" width="100%" />
+  <img src="./docs/screenshots/timer-desktop.png" alt="Timer do seocron no tema Nord com controles de visualização" width="100%" />
 </p>
 
 ## Funcionalidades
 
 - Timer com presets de 5, 10 e 25 minutos e entrada manual.
-- Cronômetro com registro de voltas e tempos parciais.
+- Cronômetro com voltas e tempos parciais.
 - Contagem derivada de timestamps reais, sem acumular ticks de intervalo.
-- Wake Lock enquanto a contagem está ativa, com fallback para navegadores incompatíveis.
-- Dez temas curados e quatro fontes locais, incluindo opções CRT e LCD clássicas.
+- Escala do mostrador em 80%, 100%, 120% ou 140%, compartilhada entre os modos.
+- Modo foco e tela cheia independentes, com fallback seguro.
+- Wake Lock enquanto a contagem está ativa.
+- Dez temas e seis fontes locais: JetBrains Mono, Space Mono, IBM Plex Mono, Orbitron, VT323 e DSEG7.
 - Atalhos desktop: `Space` inicia ou pausa; `R` reseta o modo ativo.
-- Layout responsivo, título da aba em tempo real e estado restrito à memória da aba.
+- Layout sem overflow a partir de 320 px, título da aba em tempo real e estado apenas na memória.
 
-## Outros modos
+## Modos e telas
 
 <p align="center">
-  <img src="./docs/screenshots/stopwatch-desktop.png" alt="Cronômetro com volta no tema Marine Instrument e fonte DSEG7" width="64%" />
-  <img src="./docs/screenshots/timer-mobile.png" alt="Timer mobile no tema Pit Lane e fonte VT323" width="30%" />
+  <img src="./docs/screenshots/stopwatch-desktop.png" alt="Cronômetro do seocron com uma volta registrada e fonte IBM Plex Mono" width="64%" />
+  <img src="./docs/screenshots/timer-mobile.png" alt="Timer mobile com fonte Orbitron e mostrador em 140%" width="30%" />
+</p>
+
+<p align="center">
+  <img src="./docs/screenshots/timer-focus-desktop.png" alt="Timer em modo foco com fonte Orbitron e mostrador em 120%" width="100%" />
 </p>
 
 ## Requisitos
 
 - Node.js 24.15+.
 - npm.
-- HTTPS no ambiente publicado para uso da Screen Wake Lock API.
+- HTTPS no ambiente publicado para Screen Wake Lock e algumas políticas de fullscreen.
 
 ## Comandos
 
-| Comando               | Finalidade                                  |
-| --------------------- | ------------------------------------------- |
-| `npm run dev`         | servidor local com hot reload               |
-| `npm run typecheck`   | validação TypeScript sem emissão            |
-| `npm run lint`        | análise estática                            |
-| `npm run test`        | testes unitários e de componentes           |
-| `npm run test:e2e`    | build e testes dos fluxos reais no Chromium |
-| `npm run build`       | typecheck e build estático em `dist/`       |
-| `npm run verify`      | formatação, tipos, lint, unitários e build  |
-| `npm run verify:full` | `verify` mais E2E; gate de integração       |
+| Comando                      | Finalidade                                      |
+| ---------------------------- | ----------------------------------------------- |
+| `npm run dev`                | servidor local com hot reload                   |
+| `npm run typecheck`          | validação TypeScript sem emissão                |
+| `npm run lint`               | análise estática                                |
+| `npm run test`               | testes unitários e de componentes               |
+| `npm run test:coverage`      | testes e relatório com mínimos de cobertura     |
+| `npm run test:e2e`           | build e E2E nos três navegadores                |
+| `npm run test:e2e:chromium`  | E2E focado no Chromium                          |
+| `npm run quality:budget`     | limites de JavaScript, CSS e fontes             |
+| `npm run quality:lighthouse` | três medições locais do Lighthouse              |
+| `npm run build`              | typecheck e build estático em `dist/`           |
+| `npm run verify`             | formatação, tipos, lint, testes, build e bundle |
+| `npm run verify:full`        | `verify` mais E2E em Chromium, Firefox e WebKit |
 
-## Arquitetura
+## Arquitetura em resumo
 
-A aplicação usa React e TypeScript sobre Vite. Tailwind fornece utilitários de layout; cores são expostas por tokens CSS semânticos para permitir temas curados sem acoplar componentes a paletas específicas.
+React e TypeScript rodam sobre Vite. Os motores de Timer e Cronômetro ficam em hooks separados da apresentação. Intervalos apenas solicitam renderização; diferenças de `Date.now()` são a fonte real do tempo.
 
-Os motores de Timer e Cronômetro são hooks independentes da interface. O Timer armazena o timestamp de término; o Cronômetro armazena o timestamp de início e o tempo já acumulado. Intervalos servem apenas para solicitar renderização. O valor autoritativo sempre é calculado por diferenças de `Date.now()`, inclusive ao retornar de uma aba suspensa.
+Tema, fonte, escala, foco, voltas e contagens vivem em state React. Recarregar restaura os padrões. Nenhuma Web Storage, cookie, API remota ou fonte externa é usada em runtime.
 
-Preferências de tema e fonte vivem somente em state React. É uma invariante do produto não ler nem gravar Web Storage, cookies, banco de dados ou APIs remotas.
+Integrações de navegador são isoladas em hooks com detecção de suporte, fallback e cleanup: Fullscreen, Wake Lock, título e atalhos. Tokens CSS semânticos mantêm os temas desacoplados dos componentes.
 
-As fontes são empacotadas no build e servidas pelo mesmo host da aplicação. JetBrains Mono, Space Mono e VT323 vêm de pacotes Fontsource; DSEG7 Classic vem do pacote oficial DSEG. Nenhuma fonte usa CDN em runtime.
+A explicação completa, incluindo fluxo de dados, decisões e limites, está em [Contexto do projeto](./docs/PROJECT_CONTEXT.md). Para ler o código acompanhado de conceitos e testes, use o [Guia de engenharia](./docs/GUIA_DE_ENGENHARIA.md).
 
-Integrações de navegador ficam em hooks isolados:
+## Qualidade
 
-- Wake Lock é solicitado apenas enquanto o modo ativo está rodando, readquirido após retorno à aba e liberado ao pausar ou desmontar.
-- O título da página deriva do modo e do timestamp atual.
-- Atalhos globais ignoram campos e controles interativos para preservar comportamento nativo de teclado.
+Cada PR executa jobs paralelos e obrigatórios:
 
-Os temas possuem testes de contraste e de sincronização entre os tokens TypeScript e o CSS enviado. Axe cobre a semântica da aplicação em todas as paletas; contraste é testado separadamente porque jsdom não possui engine de layout.
+- `Verify`: formatação, tipos, lint, testes e build;
+- `E2E`: Chromium, Firefox e WebKit;
+- `Quality Metrics`: cobertura, orçamento do build e Lighthouse.
 
-## Verificação
+| Métrica                   |     Gate |
+| ------------------------- | -------: |
+| statements e linhas       |    ≥ 85% |
+| funções e branches        |    ≥ 80% |
+| JavaScript gzip           |  ≤ 90 KB |
+| CSS gzip                  |  ≤ 15 KB |
+| fontes locais             | ≤ 400 KB |
+| Lighthouse acessibilidade |     100% |
+| Lighthouse boas práticas  |    ≥ 95% |
+| Lighthouse SEO            |    ≥ 90% |
 
-Antes de considerar uma alteração pronta:
+Performance abaixo de 90% gera aviso; o orçamento de bundle permanece o gate determinístico. Relatórios de cobertura, Lighthouse, traces e screenshots são artefatos da CI, não métricas de usuários.
+
+Antes de integrar uma mudança:
 
 1. Rode o teste mais próximo da área alterada.
-2. Rode `npm run verify:full` antes de integrar a branch.
-3. Confirme que nenhuma persistência ou requisição externa em runtime foi adicionada.
-4. Para mudanças visuais, confira teclado, foco visível, contraste e layout mobile.
+2. Rode `npm run verify:full`.
+3. Confirme privacidade, teclado, foco visível, contraste e mobile quando aplicável.
 
-Regras adicionais para pessoas e agentes estão em [AGENTS.md](./AGENTS.md).
+Regras de contribuição e invariantes estão em [AGENTS.md](./AGENTS.md).
 
 ## Deploy
 
-`npm run build` gera `dist/`, que pode ser servido por qualquer hospedagem estática. Não existe processo de servidor da aplicação em produção.
+`npm run build` gera `dist/`, servida como conteúdo estático. A Vercel cria previews por PR e publica a `main`. Após um deploy de produção, um smoke test abre a URL real e confirma carregamento, início/pausa do Timer e troca para Cronômetro.
 
-O baseline de produção usa Vercel com `main` como branch de produção. `vercel.json` define o build e os headers defensivos; nenhum runtime ou secret é necessário. O workflow de CI executa `npm run verify:full`, incluindo os fluxos reais no Chromium, antes da integração de mudanças.
+A `main` exige PR, branch atualizada, checks e preview aprovados, conversas resolvidas e histórico linear. O merge usa squash e a branch curta é removida depois da integração.

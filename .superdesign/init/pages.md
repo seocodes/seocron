@@ -9,6 +9,7 @@ Dependencies:
 - `src/main.tsx`
   - `src/index.css`
   - `src/App.tsx`
+    - `src/components/DisplayControls.tsx`
     - `src/components/ModeToggle.tsx`
     - `src/features/appearance/AppearancePanel.tsx`
       - `src/features/appearance/themes.ts`
@@ -16,19 +17,23 @@ Dependencies:
         - `src/features/appearance/appearance-context.ts`
     - `src/features/stopwatch/StopwatchPanel.tsx`
       - `src/components/ControlButton.tsx`
+      - `src/components/DisplayControls.tsx`
       - `src/components/TimeDisplay.tsx`
       - `src/lib/time/formatDuration.ts`
       - `src/features/stopwatch/useStopwatch.ts`
     - `src/features/timer/TimerPanel.tsx`
       - `src/components/ControlButton.tsx`
+      - `src/components/DisplayControls.tsx`
       - `src/components/TimeDisplay.tsx`
       - `src/lib/time/duration.ts`
       - `src/lib/time/formatDuration.ts`
       - `src/lib/time/time.constants.ts`
       - `src/features/timer/useTimer.ts`
     - `src/hooks/useDocumentTitle.ts`
+    - `src/hooks/useFullscreen.ts`
     - `src/hooks/useKeyboardShortcuts.ts`
     - `src/hooks/useWakeLock.ts`
+    - `src/features/display/display-scale.ts`
     - `src/lib/time/formatDuration.ts`
     - `src/lib/time/time.constants.ts`
   - `src/features/appearance/AppearanceProvider.tsx`

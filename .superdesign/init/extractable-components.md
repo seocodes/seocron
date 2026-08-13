@@ -1,6 +1,6 @@
 # Extractable components
 
-The app has no shared cross-page navigation or layout component worth extracting as a Superdesign DraftComponent. It is a single-route utility and its three primitives are small enough to keep inline as design context.
+The app has no shared cross-page navigation or layout component worth extracting as a DraftComponent. It is a single-route utility and its four primitives are small enough to keep inline as design context.
 
 ## ControlButton
 
@@ -23,5 +23,13 @@ The app has no shared cross-page navigation or layout component worth extracting
 - Source: `src/components/TimeDisplay.tsx`
 - Category: basic
 - Description: Responsive digital numeric output.
-- Extractable props: `label`, `value`, `compact`
-- Hardcoded: tabular digit typography and scale
+- Extractable props: `label`, `value`, `compact`, `scale`
+- Hardcoded: tabular digit typography and scale states
+
+## DisplayControls
+
+- Source: `src/components/DisplayControls.tsx`
+- Category: basic
+- Description: Shared scale, focus, and fullscreen toolbar.
+- Extractable props: `scale`, pressed/supported states, action callbacks
+- Hardcoded: Portuguese labels, discrete scale boundaries, focus behavior
