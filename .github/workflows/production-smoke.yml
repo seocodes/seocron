@@ -22,7 +22,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
-      PLAYWRIGHT_BASE_URL: ${{ github.event.inputs.url || github.event.deployment_status.target_url }}
+      # Vercel's generated deployment URL may require authentication even when
+      # the canonical production alias is public.
+      PLAYWRIGHT_BASE_URL: ${{ github.event.inputs.url || 'https://seocron-ashen.vercel.app/' }}
 
     steps:
       - name: Check out repository
