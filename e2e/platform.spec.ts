@@ -44,6 +44,59 @@ test('aparência vive apenas na memória da aba', async ({ page }) => {
   )
 })
 
+test('escala e modo foco vivem apenas na memória da aba', async ({ page }) => {
+  await page.goto('/')
+
+  await page.getByRole('button', { name: 'Aumentar mostrador' }).click()
+  await page.getByRole('button', { name: 'Ativar modo foco' }).click()
+  await expect(page.getByLabel('Tamanho do mostrador: 120%')).toBeVisible()
+  await expect(
+    page.getByRole('button', { name: 'Sair do modo foco' }),
+  ).toBeVisible()
+
+  await page.reload()
+  await expect(page.getByLabel('Tamanho do mostrador: 100%')).toBeVisible()
+  await expect(
+    page.getByRole('button', { name: 'Ativar modo foco' }),
+  ).toBeVisible()
+  await expect(page.getByRole('combobox', { name: 'Tema' })).toBeVisible()
+})
+
+test('modo foco preserva uma volta registrada em memória', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Cronômetro', exact: true }).click()
+  await page.getByRole('button', { name: 'Iniciar Cronômetro' }).click()
+  await page.getByRole('button', { name: 'Ativar modo foco' }).click()
+  await page.getByRole('button', { name: 'Registrar volta' }).click()
+
+  await expect(page.getByText('Voltas')).toHaveCount(0)
+  await page.getByRole('button', { name: 'Sair do modo foco' }).click()
+  await expect(page.getByRole('rowheader', { name: '01' })).toBeVisible()
+})
+
+test('tela cheia oferece ação ou fallback seguro', async ({ page }) => {
+  await page.goto('/')
+  const fullscreenIsSupported = await page.evaluate(
+    () =>
+      document.fullscreenEnabled &&
+      typeof document.documentElement.requestFullscreen === 'function',
+  )
+
+  if (fullscreenIsSupported) {
+    await page.getByRole('button', { name: 'Entrar em tela cheia' }).click()
+    await expect
+      .poll(() => page.evaluate(() => document.fullscreenElement !== null))
+      .toBe(true)
+    await page.getByRole('button', { name: 'Sair da tela cheia' }).click()
+  } else {
+    await expect(
+      page.getByRole('button', {
+        name: 'Tela cheia indisponível neste navegador',
+      }),
+    ).toBeDisabled()
+  }
+})
+
 test.describe('layout mobile', () => {
   test.use({ viewport: { width: 390, height: 844 } })
 
@@ -57,14 +110,47 @@ test.describe('layout mobile', () => {
           document.documentElement.clientWidth,
       )
 
-    for (const fontId of ['vt323', 'dseg7']) {
+    for (const fontId of ['ibm-plex', 'orbitron', 'vt323', 'dseg7']) {
       await page.getByRole('combobox', { name: 'Fonte' }).selectOption(fontId)
-      await expect.poll(hasHorizontalOverflow).toBe(false)
-      await page
-        .getByRole('button', { name: 'Cronômetro', exact: true })
-        .click()
-      await expect.poll(hasHorizontalOverflow).toBe(false)
-      await page.getByRole('button', { name: 'Timer', exact: true }).click()
+      for (let scale = 100; scale <= 140; scale += 20) {
+        await expect.poll(hasHorizontalOverflow).toBe(false)
+        await page
+          .getByRole('button', { name: 'Cronômetro', exact: true })
+          .click()
+        await expect.poll(hasHorizontalOverflow).toBe(false)
+        await page.getByRole('button', { name: 'Timer', exact: true }).click()
+
+        if (scale < 140) {
+          await page.getByRole('button', { name: 'Aumentar mostrador' }).click()
+        }
+      }
+      await page.reload()
     }
+  })
+})
+
+test.describe('layout mínimo', () => {
+  test.use({ viewport: { width: 320, height: 700 } })
+
+  test('mantém 140% sem overflow nos dois modos e no foco', async ({
+    page,
+  }) => {
+    await page.goto('/')
+    await page.getByRole('combobox', { name: 'Fonte' }).selectOption('orbitron')
+    await page.getByRole('button', { name: 'Aumentar mostrador' }).click()
+    await page.getByRole('button', { name: 'Aumentar mostrador' }).click()
+
+    const hasHorizontalOverflow = () =>
+      page.evaluate(
+        () =>
+          document.documentElement.scrollWidth >
+          document.documentElement.clientWidth,
+      )
+
+    await expect.poll(hasHorizontalOverflow).toBe(false)
+    await page.getByRole('button', { name: 'Cronômetro', exact: true }).click()
+    await expect.poll(hasHorizontalOverflow).toBe(false)
+    await page.getByRole('button', { name: 'Ativar modo foco' }).click()
+    await expect.poll(hasHorizontalOverflow).toBe(false)
   })
 })

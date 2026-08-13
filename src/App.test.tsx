@@ -22,6 +22,51 @@ describe('App', () => {
       'true',
     )
     expect(screen.getByRole('heading', { name: 'Timer' })).toBeInTheDocument()
+    expect(screen.getByText('seocron', { exact: true })).toBeInTheDocument()
+    expect(
+      screen.queryByText(/precision timing instrument/i),
+    ).not.toBeInTheDocument()
+  })
+
+  it('changes display scale within limits and keeps it across modes', async () => {
+    const user = userEvent.setup()
+    renderApp()
+
+    expect(screen.getByLabelText('Tamanho do mostrador: 100%')).toBeVisible()
+    await user.click(screen.getByRole('button', { name: 'Aumentar mostrador' }))
+    await user.click(screen.getByRole('button', { name: 'Aumentar mostrador' }))
+    expect(screen.getByLabelText('Tamanho do mostrador: 140%')).toBeVisible()
+    expect(
+      screen.getByRole('button', { name: 'Aumentar mostrador' }),
+    ).toBeDisabled()
+
+    await user.click(screen.getByRole('button', { name: 'Cronômetro' }))
+    expect(screen.getByLabelText('Tamanho do mostrador: 140%')).toBeVisible()
+  })
+
+  it('focus mode keeps essential actions and hides secondary content', async () => {
+    const user = userEvent.setup()
+    renderApp()
+
+    await user.click(screen.getByRole('button', { name: 'Ativar modo foco' }))
+
+    expect(screen.getByRole('button', { name: 'Iniciar Timer' })).toBeVisible()
+    expect(
+      screen.getByRole('button', { name: 'Sair do modo foco' }),
+    ).toHaveAttribute('aria-pressed', 'true')
+    expect(
+      screen.queryByRole('button', { name: 'Cronômetro' }),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('combobox', { name: 'Tema' }),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: 'Definir Timer para 5 minutos' }),
+    ).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Sair do modo foco' }))
+    expect(screen.getByRole('button', { name: 'Cronômetro' })).toBeVisible()
+    expect(screen.getByRole('combobox', { name: 'Tema' })).toBeVisible()
   })
 
   it('switches to Stopwatch mode', async () => {

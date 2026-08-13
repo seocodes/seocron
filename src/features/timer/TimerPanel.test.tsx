@@ -6,10 +6,21 @@ import { MINUTE_MS } from '../../lib/time/time.constants'
 import { TimerPanel } from './TimerPanel'
 import { useTimer } from './useTimer'
 
+const display = {
+  scale: 100 as const,
+  isFocusMode: false,
+  isFullscreen: false,
+  isFullscreenSupported: false,
+  onDecrease: vi.fn(),
+  onIncrease: vi.fn(),
+  onToggleFocus: vi.fn(),
+  onToggleFullscreen: vi.fn(),
+}
+
 function TimerHarness() {
   const timer = useTimer(5 * MINUTE_MS)
 
-  return <TimerPanel announce={vi.fn()} timer={timer} />
+  return <TimerPanel announce={vi.fn()} display={display} timer={timer} />
 }
 
 describe('TimerPanel', () => {
@@ -69,5 +80,29 @@ describe('TimerPanel', () => {
     expect(
       screen.getByRole('button', { name: 'Definir Timer para 5 minutos' }),
     ).toBeDisabled()
+  })
+
+  it('hides configuration in focus mode', () => {
+    const timer = {
+      ...display,
+      isFocusMode: true,
+    }
+
+    function FocusHarness() {
+      return (
+        <TimerPanel
+          announce={vi.fn()}
+          display={timer}
+          timer={useTimer(5 * MINUTE_MS)}
+        />
+      )
+    }
+
+    render(<FocusHarness />)
+
+    expect(screen.getByRole('button', { name: 'Iniciar Timer' })).toBeVisible()
+    expect(
+      screen.queryByRole('button', { name: 'Definir Timer para 5 minutos' }),
+    ).not.toBeInTheDocument()
   })
 })
