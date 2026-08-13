@@ -1,4 +1,8 @@
 import { ControlButton } from '../../components/ControlButton'
+import {
+  DisplayControls,
+  type DisplayControlsProps,
+} from '../../components/DisplayControls'
 import { TimeDisplay } from '../../components/TimeDisplay'
 import { formatStopwatchDuration } from '../../lib/time/formatDuration'
 import type { StopwatchController } from './useStopwatch'
@@ -6,9 +10,14 @@ import type { StopwatchController } from './useStopwatch'
 interface StopwatchPanelProps {
   stopwatch: StopwatchController
   announce: (message: string) => void
+  display: DisplayControlsProps
 }
 
-export function StopwatchPanel({ stopwatch, announce }: StopwatchPanelProps) {
+export function StopwatchPanel({
+  stopwatch,
+  announce,
+  display,
+}: StopwatchPanelProps) {
   const isRunning = stopwatch.status === 'running'
   const displayValue = formatStopwatchDuration(stopwatch.elapsedMs)
 
@@ -60,10 +69,16 @@ export function StopwatchPanel({ stopwatch, announce }: StopwatchPanelProps) {
                 : 'Pronto para começar'}
           </span>
         </div>
-        <TimeDisplay compact label="Cronômetro" value={displayValue} />
+        <TimeDisplay
+          compact
+          label="Cronômetro"
+          scale={display.scale}
+          value={displayValue}
+        />
         <p aria-hidden="true" className="display-units">
           MM&nbsp;&nbsp;&nbsp;SS&nbsp;&nbsp;&nbsp;CS
         </p>
+        <DisplayControls {...display} />
       </div>
 
       <div className="control-deck">
@@ -102,61 +117,63 @@ export function StopwatchPanel({ stopwatch, announce }: StopwatchPanelProps) {
         </ControlButton>
       </div>
 
-      <div className="lap-register">
-        <div className="lap-register__header">
-          <h2 className="panel-legend">Voltas</h2>
-          <span className="lap-register__count">
-            MEM {stopwatch.laps.length.toString().padStart(2, '0')}
-          </span>
-        </div>
-
-        {stopwatch.laps.length === 0 ? (
-          <p className="lap-register__empty">
-            As voltas registradas aparecerão aqui.
-          </p>
-        ) : (
-          <div
-            className="lap-register__scroll"
-            role="region"
-            aria-label="Lista de voltas"
-            tabIndex={0}
-          >
-            <table className="lap-table">
-              <thead>
-                <tr>
-                  <th className="lap-table__heading" scope="col">
-                    Volta
-                  </th>
-                  <th className="lap-table__heading text-right" scope="col">
-                    Parcial
-                  </th>
-                  <th className="lap-table__heading text-right" scope="col">
-                    Total
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {stopwatch.laps.toReversed().map((lap) => (
-                  <tr className="lap-table__row" key={lap.number}>
-                    <th
-                      className="lap-table__cell lap-table__cell--index"
-                      scope="row"
-                    >
-                      {lap.number.toString().padStart(2, '0')}
-                    </th>
-                    <td className="lap-table__cell text-right text-[var(--text-secondary)]">
-                      +{formatStopwatchDuration(lap.splitMs)}
-                    </td>
-                    <td className="lap-table__cell text-right font-bold">
-                      {formatStopwatchDuration(lap.elapsedMs)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+      {!display.isFocusMode && (
+        <div className="lap-register">
+          <div className="lap-register__header">
+            <h2 className="panel-legend">Voltas</h2>
+            <span className="lap-register__count">
+              MEM {stopwatch.laps.length.toString().padStart(2, '0')}
+            </span>
           </div>
-        )}
-      </div>
+
+          {stopwatch.laps.length === 0 ? (
+            <p className="lap-register__empty">
+              As voltas registradas aparecerão aqui.
+            </p>
+          ) : (
+            <div
+              className="lap-register__scroll"
+              role="region"
+              aria-label="Lista de voltas"
+              tabIndex={0}
+            >
+              <table className="lap-table">
+                <thead>
+                  <tr>
+                    <th className="lap-table__heading" scope="col">
+                      Volta
+                    </th>
+                    <th className="lap-table__heading text-right" scope="col">
+                      Parcial
+                    </th>
+                    <th className="lap-table__heading text-right" scope="col">
+                      Total
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {stopwatch.laps.toReversed().map((lap) => (
+                    <tr className="lap-table__row" key={lap.number}>
+                      <th
+                        className="lap-table__cell lap-table__cell--index"
+                        scope="row"
+                      >
+                        {lap.number.toString().padStart(2, '0')}
+                      </th>
+                      <td className="lap-table__cell text-right text-[var(--text-secondary)]">
+                        +{formatStopwatchDuration(lap.splitMs)}
+                      </td>
+                      <td className="lap-table__cell text-right font-bold">
+                        {formatStopwatchDuration(lap.elapsedMs)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
     </section>
   )
 }

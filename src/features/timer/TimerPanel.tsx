@@ -1,6 +1,10 @@
 import { useState } from 'react'
 
 import { ControlButton } from '../../components/ControlButton'
+import {
+  DisplayControls,
+  type DisplayControlsProps,
+} from '../../components/DisplayControls'
 import { TimeDisplay } from '../../components/TimeDisplay'
 import { durationPartsToMs } from '../../lib/time/duration'
 import {
@@ -13,6 +17,7 @@ import type { TimerController } from './useTimer'
 interface TimerPanelProps {
   timer: TimerController
   announce: (message: string) => void
+  display: DisplayControlsProps
 }
 
 const presets = [5, 10, 25]
@@ -31,7 +36,7 @@ function parseInputField(value: string): number | null {
   return /^\d{1,2}$/.test(value) ? Number(value) : null
 }
 
-export function TimerPanel({ timer, announce }: TimerPanelProps) {
+export function TimerPanel({ timer, announce, display }: TimerPanelProps) {
   const [fields, setFields] = useState(() =>
     toInputFields(timer.configuredDurationMs),
   )
@@ -110,10 +115,11 @@ export function TimerPanel({ timer, announce }: TimerPanelProps) {
                 : 'Defina um tempo e comece'}
           </span>
         </div>
-        <TimeDisplay label="Timer" value={displayValue} />
+        <TimeDisplay label="Timer" scale={display.scale} value={displayValue} />
         <p aria-hidden="true" className="display-units">
           HH&nbsp;&nbsp;&nbsp;MM&nbsp;&nbsp;&nbsp;SS
         </p>
+        <DisplayControls {...display} />
       </div>
 
       <div className="control-deck">
@@ -145,85 +151,89 @@ export function TimerPanel({ timer, announce }: TimerPanelProps) {
         </ControlButton>
       </div>
 
-      <div className="configuration-bay">
-        <div className="configuration-grid">
-          <fieldset className="configuration-group" disabled={isRunning}>
-            <legend className="panel-legend">Presets</legend>
-            <div className="preset-bank">
-              {presets.map((minutes) => {
-                const durationMs = minutes * MINUTE_MS
+      {!display.isFocusMode && (
+        <div className="configuration-bay">
+          <div className="configuration-grid">
+            <fieldset className="configuration-group" disabled={isRunning}>
+              <legend className="panel-legend">Presets</legend>
+              <div className="preset-bank">
+                {presets.map((minutes) => {
+                  const durationMs = minutes * MINUTE_MS
 
-                return (
-                  <button
-                    aria-label={`Definir Timer para ${minutes} minutos`}
-                    aria-pressed={timer.configuredDurationMs === durationMs}
-                    className="preset-key"
-                    key={minutes}
-                    onClick={() => selectPreset(minutes)}
-                    type="button"
-                  >
-                    {minutes} min
-                  </button>
-                )
-              })}
-            </div>
-          </fieldset>
+                  return (
+                    <button
+                      aria-label={`Definir Timer para ${minutes} minutos`}
+                      aria-pressed={timer.configuredDurationMs === durationMs}
+                      className="preset-key"
+                      key={minutes}
+                      onClick={() => selectPreset(minutes)}
+                      type="button"
+                    >
+                      {minutes} min
+                    </button>
+                  )
+                })}
+              </div>
+            </fieldset>
 
-          <fieldset className="configuration-group" disabled={isRunning}>
-            <legend className="panel-legend">Manual</legend>
-            <div className="manual-control">
-              {(
-                [
-                  ['hours', 'Horas', 99],
-                  ['minutes', 'Minutos', 59],
-                  ['seconds', 'Segundos', 59],
-                ] as const
-              ).map(([field, label, max], index) => (
-                <div className="manual-field-group" key={field}>
-                  {index > 0 && (
-                    <span aria-hidden="true" className="manual-separator">
-                      :
-                    </span>
-                  )}
-                  <label className="manual-label">
-                    {label}
-                    <input
-                      aria-describedby={error ? 'timer-input-error' : undefined}
-                      className="manual-input"
-                      inputMode="numeric"
-                      max={max}
-                      min={0}
-                      onChange={(event) => {
-                        setFields((current) => ({
-                          ...current,
-                          [field]: event.target.value,
-                        }))
-                        setError(null)
-                      }}
-                      type="number"
-                      value={fields[field]}
-                    />
-                  </label>
-                </div>
-              ))}
-              <button
-                className="apply-key"
-                onClick={applyManualDuration}
-                type="button"
+            <fieldset className="configuration-group" disabled={isRunning}>
+              <legend className="panel-legend">Manual</legend>
+              <div className="manual-control">
+                {(
+                  [
+                    ['hours', 'Horas', 99],
+                    ['minutes', 'Minutos', 59],
+                    ['seconds', 'Segundos', 59],
+                  ] as const
+                ).map(([field, label, max], index) => (
+                  <div className="manual-field-group" key={field}>
+                    {index > 0 && (
+                      <span aria-hidden="true" className="manual-separator">
+                        :
+                      </span>
+                    )}
+                    <label className="manual-label">
+                      {label}
+                      <input
+                        aria-describedby={
+                          error ? 'timer-input-error' : undefined
+                        }
+                        className="manual-input"
+                        inputMode="numeric"
+                        max={max}
+                        min={0}
+                        onChange={(event) => {
+                          setFields((current) => ({
+                            ...current,
+                            [field]: event.target.value,
+                          }))
+                          setError(null)
+                        }}
+                        type="number"
+                        value={fields[field]}
+                      />
+                    </label>
+                  </div>
+                ))}
+                <button
+                  className="apply-key"
+                  onClick={applyManualDuration}
+                  type="button"
+                >
+                  Aplicar
+                </button>
+              </div>
+              <p
+                className="input-error"
+                id="timer-input-error"
+                role={error ? 'alert' : undefined}
               >
-                Aplicar
-              </button>
-            </div>
-            <p
-              className="input-error"
-              id="timer-input-error"
-              role={error ? 'alert' : undefined}
-            >
-              {error}
-            </p>
-          </fieldset>
+                {error}
+              </p>
+            </fieldset>
+          </div>
         </div>
-      </div>
+      )}
     </section>
   )
 }

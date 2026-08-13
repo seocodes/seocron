@@ -35,4 +35,19 @@ describe('application accessibility', () => {
       ).toHaveLength(0)
     },
   )
+
+  it('focus mode has no automated semantic violations', async () => {
+    const { container } = render(
+      <AppearanceProvider>
+        <App />
+      </AppearanceProvider>,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Ativar modo foco' }))
+    const results = await axe.run(container, {
+      rules: { 'color-contrast': { enabled: false } },
+    })
+
+    expect(results.violations).toHaveLength(0)
+  })
 })
