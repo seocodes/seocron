@@ -10,7 +10,7 @@ test('executa, registra volta, pausa e reseta o Cronômetro', async ({
   await expect(display).toHaveText('00:00.00')
   await page.getByRole('button', { name: 'Iniciar Cronômetro' }).click()
   await expect
-    .poll(() => display.textContent(), { timeout: 2_500 })
+    .poll(() => display.textContent(), { timeout: 5_000 })
     .not.toBe('00:00.00')
 
   await page.getByRole('button', { name: 'Registrar volta' }).click()

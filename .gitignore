@@ -12,6 +12,8 @@ dist
 dist-ssr
 playwright-report
 test-results
+coverage
+.lighthouseci
 *.local
 
 # Local environment and hosting metadata

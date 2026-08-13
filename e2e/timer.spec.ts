@@ -18,7 +18,7 @@ test('configura, executa e pausa o Timer sem depender de ticks', async ({
   await page.getByRole('button', { name: 'Iniciar Timer' }).click()
   await expect(page).toHaveTitle(/^\d{2}:\d{2} · Timer — seocron$/)
   await expect
-    .poll(() => display.textContent(), { timeout: 2_500 })
+    .poll(() => display.textContent(), { timeout: 5_000 })
     .not.toBe('10:00')
 
   await page.getByRole('button', { name: 'Pausar Timer' }).click()

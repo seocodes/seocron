@@ -52,6 +52,20 @@ describe('App', () => {
     ).toBeInTheDocument()
   })
 
+  it('pauses a running Stopwatch before returning to Timer', async () => {
+    const user = userEvent.setup()
+    renderApp()
+
+    await user.click(screen.getByRole('button', { name: 'Cronômetro' }))
+    await user.click(screen.getByRole('button', { name: 'Iniciar Cronômetro' }))
+    await user.click(screen.getByRole('button', { name: 'Timer' }))
+    await user.click(screen.getByRole('button', { name: 'Cronômetro' }))
+
+    expect(
+      screen.getByRole('button', { name: 'Continuar Cronômetro' }),
+    ).toBeInTheDocument()
+  })
+
   it('controls the active mode with keyboard shortcuts', () => {
     renderApp()
 
@@ -63,6 +77,19 @@ describe('App', () => {
     fireEvent.keyDown(window, { key: 'r' })
     expect(
       screen.getByRole('button', { name: 'Iniciar Timer' }),
+    ).toBeInTheDocument()
+  })
+
+  it('resets the active Stopwatch with the keyboard shortcut', async () => {
+    const user = userEvent.setup()
+    renderApp()
+
+    await user.click(screen.getByRole('button', { name: 'Cronômetro' }))
+    await user.click(screen.getByRole('button', { name: 'Iniciar Cronômetro' }))
+    fireEvent.keyDown(window, { key: 'r' })
+
+    expect(
+      screen.getByRole('button', { name: 'Iniciar Cronômetro' }),
     ).toBeInTheDocument()
   })
 })

@@ -6,17 +6,26 @@
   "engines": {
     "node": "^24.15.0"
   },
+  "overrides": {
+    "nanoid": "^3.3.17"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "typecheck": "tsc -b --pretty false",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "test:e2e": "npm run build && playwright test",
+    "test:e2e:chromium": "npm run build && playwright test --project=chromium",
+    "test:smoke": "playwright test e2e/smoke.spec.ts --project=chromium",
     "test:watch": "vitest",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "verify": "npm run format:check && npm run typecheck && npm run lint && npm run test && npm run build",
+    "quality:budget": "node scripts/check-build-budget.mjs",
+    "quality:lighthouse": "node scripts/run-lighthouse.mjs",
+    "quality:summary": "node scripts/write-quality-summary.mjs",
+    "verify": "npm run format:check && npm run typecheck && npm run lint && npm run test && npm run build && npm run quality:budget",
     "verify:full": "npm run verify && playwright test",
     "preview": "vite preview --host 127.0.0.1 --port 4173"
   },
@@ -38,8 +47,10 @@
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.4",
+    "@vitest/coverage-v8": "^4.1.10",
     "axe-core": "^4.12.1",
     "jsdom": "^30.0.1",
+    "lighthouse": "^13.4.1",
     "oxlint": "^1.77.0",
     "prettier": "^3.9.6",
     "tailwindcss": "^4.3.3",
