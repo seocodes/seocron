@@ -12,7 +12,7 @@ Present seocron as a compact technical bench instrument rather than a dashboard 
 
 - Desktop chassis width: approximately 760–860px, centered vertically where space permits.
 - Mobile chassis: nearly full viewport width with the same physical hierarchy stacked vertically.
-- Top plate: `seocron` nameplate, concise instrument metadata, and a mechanical two-position mode switch.
+- Top plate: `seocron` wordmark only and a mechanical two-position mode switch.
 - Display well: dark/recessed smoked-glass surface; the time is the dominant element; status and units remain legible.
 - Control deck: rectangular physical keys with primary, secondary, and disabled states.
 - Lower bay: Timer presets/manual inputs or Stopwatch lap register.
@@ -36,8 +36,9 @@ Present seocron as a compact technical bench instrument rather than a dashboard 
 
 ## Typography
 
-- UI labels and controls: JetBrains Mono Variable by default; Space Mono is the alternate.
-- Display only: selected font may be JetBrains Mono, Space Mono, VT323, or DSEG7.
+- UI labels and controls: JetBrains Mono Variable by default; IBM Plex Mono may also serve the interface.
+- Display: selected font may be JetBrains Mono, Space Mono, IBM Plex Mono, Orbitron, VT323, or DSEG7.
+- Orbitron is restricted to the display; keep small controls in a legible mono UI font.
 - Do not apply DSEG7 to small UI labels.
 - Uppercase technical labels use moderate tracking (`0.12em`–`0.18em`) and remain at least 12px.
 - Numeric content uses tabular numbers.
@@ -60,11 +61,13 @@ No free color picker.
 
 - Mode switch: two broad rectangular/low-radius segments, clearly selected with `aria-pressed` intact.
 - Time display: recessed full-width instrument window with responsive digits that never clip at 320px.
+- Display toolbar: 44px minimum keys for 80/100/120/140% scale, focus mode, and fullscreen; pressed state remains visible beyond color.
 - Action keys: 48px minimum height, slight bottom edge/shadow, pressed translation no greater than 1px.
 - Presets: bank of equal tactile keys; selected state visible beyond color through inset edge or marker.
 - Manual inputs: counter-like wells with visible labels; preserve numeric input semantics.
 - Lap register: technical table with explicit `Volta`, `Parcial`, and `Total` headings visible; scrolling region remains keyboard accessible.
 - Appearance strip: two labeled native selects integrated into chassis footer.
+- Focus mode: preserve status, display, display toolbar, and essential actions; hide the nameplate, mode switch, configuration, appearance, and lap register without deleting their in-memory state.
 
 ## Motion and interaction
 
@@ -73,6 +76,7 @@ No free color picker.
 - Honor `prefers-reduced-motion`.
 - Keep Space start/pause and R reset behavior unchanged.
 - Preserve visible focus rings, accessible names, disabled semantics, live announcements, Wake Lock behavior, and real-timestamp timing logic.
+- Keep focus mode, display scale, and browser fullscreen as independent in-memory states.
 
 ## Responsive behavior
 
